@@ -185,7 +185,7 @@
             "SONG_DESC": "Uploads the song you wrote.",
             "NEED_TEXT_SONG": "*Please write a song!*\n*Example:* ```.song eminem - rap god```",
             "NO_RESULT": "*I couldn't find anything :(*",
-            "DOWNLOADING_SONG": "```Downloading your song...```",
+            "DOWNLOADING_SONG": "*╭─► Downloading your song  ◄─╮**╰─────────🎧─────────╯*",
             "UPLOADING_SONG": "```Uploading your song...```",
             "VIDEO_DESC": "Downloads video from YouTube.",
             "NEED_VIDEO": "*Please write a video link!*\n*Example:* ```.video https://www.youtube.com/watch?v=nAFlVm5qeBc```",
@@ -225,7 +225,7 @@
         "updater": {
             "UPDATER_DESC": "Checks the update.",
             "UPDATE": "*Your bot is completely up-to-date!*",
-            "NEW_UPDATE": "*New update available for Bot!*\n\nChanges:\n```",
+            "NEW_UPDATE": "*⦁═Queen 👸 Alexa═⦁ New update available for Bot!*\n\nChanges:\n```",
             "UPDATE_NOW_DESC": "It makes updates.",
             "UPDATING": "_Updating..._",
             "INVALID_HEROKU": "*❌ Your Heroku information is wrong!*",
@@ -236,12 +236,12 @@
         },
         "whois": {
             "PL_DESC": "Displays metadata data of group or person.",
-            "SUB": "*Group Name:* ",
-            "DES": "*Group Description:* ",
-            "OWN": "*Founder:* ",
-            "COD": "*Unique Group Code:* ",
-            "JİD": "*Person JID:* ",
-            "ST": "*Person Status:* "
+            "SUB": "*🧚‍♀️Group Name:* ",
+            "DES": "*🧚‍♀️Group Description:* ",
+            "OWN": "*🧚‍♀️Founder:* ",
+            "COD": "*🧚‍♀️Unique Group Code:* ",
+            "JİD": "*🧚‍♀️Person JID:* ",
+            "ST": "*🧚‍♀️Person Status:* "
         },
         "log": {
             "LOG": "Saves the message you reply to your private number.",
