@@ -26,11 +26,11 @@ Asena.addCommand({pattern: 'animepic ?(.*)', fromMe: wk, desc: pic, usage: 'anim
   if (match[1] == 'normal') {
     var image_link = await WhatsAsenaStack.anime_wall('normal')
     var image_buffer = await axios.get(image_link, { responseType: 'arraybuffer' })
-    await message.sendMessage(Buffer.from(image_buffer.data), MessageType.image, { caption: 'Made by WhatsAsena' })
+    await message.sendMessage(Buffer.from(image_buffer.data), MessageType.image, { caption: 'Made by *⦁═⦁Queen 👸 Alexa⦁═⦁*' })
   } else if (match[1] == 'nsfw') {
     var image_link_nsfw = await WhatsAsenaStack.anime_wall('nsfw')
     var image_buffer_nsfw = await axios.get(image_link_nsfw, { responseType: 'arraybuffer' })
-    await message.sendMessage(Buffer.from(image_buffer_nsfw.data), MessageType.image, { caption: 'Made by WhatsAsena' })
+    await message.sendMessage(Buffer.from(image_buffer_nsfw.data), MessageType.image, { caption: 'Made by *⦁═⦁Queen 👸 Alexa⦁═⦁*' })
   } else {
     return await message.client.sendMessage(message.jid,wr_usage,MessageType.text)
   }
@@ -39,11 +39,11 @@ Asena.addCommand({pattern: 'animegif ?(.*)', fromMe: wk, desc: giff, usage: 'ani
   if (match[1] == 'normal') {
     var gif_link = await WhatsAsenaStack.anime_gif('normal')
     var gif_buffer = await axios.get(gif_link, { responseType: 'arraybuffer' })
-    await message.sendMessage(Buffer.from(gif_buffer.data), MessageType.video, { caption: 'Made by WhatsAsena', mimetype: Mimetype.gif })
+    await message.sendMessage(Buffer.from(gif_buffer.data), MessageType.video, { caption: 'Made by *⦁═⦁Queen 👸 Alexa⦁═⦁*', mimetype: Mimetype.gif })
   } else if (match[1] == 'nsfw') {
     var gif_link_nsfw = await WhatsAsenaStack.anime_gif('nsfw')
     var gif_buffer_nsfw = await axios.get(gif_link_nsfw, { responseType: 'arraybuffer' })
-    await message.sendMessage(Buffer.from(gif_buffer_nsfw.data), MessageType.video, { caption: 'Made by WhatsAsena', mimetype: Mimetype.gif })
+    await message.sendMessage(Buffer.from(gif_buffer_nsfw.data), MessageType.video, { caption: 'Made by *⦁═⦁Queen 👸 Alexa⦁═⦁*', mimetype: Mimetype.gif })
   } else {
     return await message.client.sendMessage(message.jid,wr_usage,MessageType.text)
   }
