@@ -1,8 +1,6 @@
 /* Copyright (C) 2020 Yusuf Usta.
-
 Licensed under the  GPL-3.0 License;
 you may not use this file except in compliance with the License.
-
 WhatsAsena - Yusuf Usta
 */
 
@@ -11,15 +9,14 @@ const path = require("path");
 const events = require("./events");
 const chalk = require('chalk');
 const config = require('./config');
-const {WAConnection, MessageType, Presence} = require('@adiwajshing/baileys');
+const {WAConnection, MessageType, Mimetype, Presence} = require('@adiwajshing/baileys');
 const {Message, StringSession, Image, Video} = require('./whatsasena/');
 const { DataTypes } = require('sequelize');
-const { getMessage } = require("./plugins/sql/greetings");
-const axios = require('axios');
+const { GreetingsDB, getMessage } = require("./plugins/sql/greetings");
 const got = require('got');
 
 // Sql
-const WhatsAsenaDB = config.DATABASE.define('WhatsAsena', {
+const WhatsAsenaDB = config.DATABASE.define('WhatsAsenaDuplicated', {
     info: {
       type: DataTypes.STRING,
       allowNull: false
@@ -43,8 +40,9 @@ String.prototype.format = function () {
     var i = 0, args = arguments;
     return this.replace(/{}/g, function () {
       return typeof args[i] != 'undefined' ? args[i++] : '';
-   });
+    });
 };
+
 if (!Date.now) {
     Date.now = function() { return new Date().getTime(); }
 }
@@ -68,11 +66,10 @@ async function whatsAsena () {
         }
     });
     
-    
     const conn = new WAConnection();
-    conn.version = [2, 2126, 14];
     const Session = new StringSession();
-
+    conn.version = [2, 2119, 6]
+    
     conn.logger.level = config.DEBUG ? 'debug' : 'warn';
     var nodb;
 
@@ -99,7 +96,6 @@ async function whatsAsena () {
     conn.on('connecting', async () => {
         console.log(`${chalk.green.bold('Whats')}${chalk.blue.bold('Asena')}
 ${chalk.white.bold('Version:')} ${chalk.red.bold(config.VERSION)}
-
 ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
     });
     
@@ -126,7 +122,7 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
         });
 
         console.log(
-            chalk.blueBright.italic('🌈  Installing plugins...')
+            chalk.blueBright.italic('⬇️  Installing plugins...')
         );
 
         fs.readdirSync('./plugins').forEach(plugin => {
@@ -136,14 +132,19 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
         });
 
         console.log(
-            chalk.green.bold('Meenakshi is Ferfect Ok! 💁🏻‍♀️')
+            chalk.green.bold('✅ Plugins installed!')
         );
+        await new Promise(r => setTimeout(r, 1100));
+
+        if (config.LANG == 'TR' || config.LANG == 'AZ') {
+            await conn.sendMessage(conn.user.jid, '*WhatsAsena Çalışıyor! 🐺*\n\n_Lütfen burada plugin denemesi yapmayın. Burası sizin LOG numaranızdır._\n_Herhangi bir sohbette komutları deneyebilirsiniz :)_\n\n*WhatsAsena Kullandığın İçin Teşekkürler 💌*', MessageType.text);
+        }
+        else {
+            await conn.sendMessage(conn.user.jid, '*WhatsAsena Working! 🐺*\n\n_Please do not try plugins here. This is your LOG number._\n_You can try commands to any chat :)_\n\n*Thanks for using WhatsAsena 💌*', MessageType.text);
+        }
     });
     
-    conn.on('chat-update', async m => {
-        if (!m.hasNewMessage) return;
-        if (!m.messages && !m.count) return;
-        let msg = m.messages.all()[0];
+    conn.on('message-new', async msg => {
         if (msg.key && msg.key.remoteJid == 'status@broadcast') return;
 
         if (config.NO_ONLINE) {
@@ -154,20 +155,14 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
             // Görüşürüz Mesajı
             var gb = await getMessage(msg.key.remoteJid, 'goodbye');
             if (gb !== false) {
-                let pp
-                try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
-                await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
-                await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message }); });
+                await conn.sendMessage(msg.key.remoteJid, gb.message, MessageType.text);
             }
             return;
         } else if (msg.messageStubType === 27 || msg.messageStubType === 31) {
             // Hoşgeldin Mesajı
             var gb = await getMessage(msg.key.remoteJid);
             if (gb !== false) {
-               let pp
-                try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
-                await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
-                await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message }); });
+                await conn.sendMessage(msg.key.remoteJid, gb.message, MessageType.text);
             }
             return;
         }
@@ -206,20 +201,12 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
                         if (!command.onlyPm === chat.jid.includes('-')) sendMsg = true;
                         else if (command.onlyGroup === chat.jid.includes('-')) sendMsg = true;
                     }
-                    
-                    else if ((config.YAK !== false && msg.key.fromMe === false && command.fromMe === true &&
-                        (msg.participant && config.YAK.includes(',') ? config.YAK.split(',').includes(msg.participant.split('@')[0]) : msg.participant.split('@')[0] == config.YAK || config.YAK.includes(',') ? config.YAK.split(',').includes(msg.key.remoteJid.split('@')[0]) : msg.key.remoteJid.split('@')[0] == config.YAK)
-                    ) || command.fromMe === msg.key.fromMe || (command.fromMe === false && !msg.key.fromMe)) {
-                        if (command.onlyPinned && chat.pin === undefined) return;
-                        if (!command.onlyPm === chat.jid.includes('-')) sendMsg = true;
-                        else if (command.onlyGroup === chat.jid.includes('-')) sendMsg = true;
-                    }
-  
+    
                     if (sendMsg) {
                         if (config.SEND_READ && command.on === undefined) {
                             await conn.chatRead(msg.key.remoteJid);
                         }
-                       
+                        
                         var match = text_msg.match(command.pattern);
                         
                         if (command.on !== undefined && (command.on === 'image' || command.on === 'photo' )
@@ -231,25 +218,29 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp... Please wait.')}`);
                         } else {
                             whats = new Message(conn, msg);
                         }
-/*
+
                         if (command.deleteCommand && msg.key.fromMe) {
                             await whats.delete(); 
                         }
-*/
+
                         try {
                             await command.function(whats, match);
                         } catch (error) {
                             if (config.LANG == 'TR' || config.LANG == 'AZ') {
-                                await conn.sendMessage(conn.user.jid, '-- HATA RAPORU [WHATSASENA] --' + 
+                                await conn.sendMessage(conn.user.jid, '*-- HATA RAPORU [WHATSASENA] --*' + 
                                     '\n*WhatsAsena bir hata gerçekleşti!*'+
                                     '\n_Bu hata logunda numaranız veya karşı bir tarafın numarası olabilir. Lütfen buna dikkat edin!_' +
                                     '\n_Yardım için Telegram grubumuza yazabilirsiniz._' +
                                     '\n_Bu mesaj sizin numaranıza (kaydedilen mesajlar) gitmiş olmalıdır._\n\n' +
-                                    'Gerçekleşen Hata: ' + error + '\n\n'
+                                    '*Gerçekleşen Hata:* ```' + error + '```\n\n'
                                     , MessageType.text);
                             } else {
-                                await conn.sendMessage(conn.user.jid, '*~♥️🕊️______~ 𝔐𝔢𝔢𝔫𝔞𝔨𝔰𝔥𝔦 ~_____🕊️♥️~*' +
-                                    '\n\n*🧞‍♂️ ' + error + '*\n'
+                                await conn.sendMessage(conn.user.jid, '*-- ERROR REPORT [WHATSASENA] --*' + 
+                                    '\n*WhatsAsena an error has occurred!*'+
+                                    '\n_This error log may include your number or the number of an opponent. Please be careful with it!_' +
+                                    '\n_You can write to our Telegram group for help._' +
+                                    '\n_This message should have gone to your number (saved messages)._\n\n' +
+                                    '*Error:* ```' + error + '```\n\n'
                                     , MessageType.text);
                             }
                         }
