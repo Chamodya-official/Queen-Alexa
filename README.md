@@ -57,7 +57,7 @@
  [![TOXIC-DEVIL](https://github.com/TOXIC-DEVIL.png?size=100)](https://github.com/TOXIC-DEVIL) |  
 ----|
 [TOXIC-DEVIL](https://github.com/TOXIC-DEVIL)  |
-Helper , Supporter , Project owner |
+Helper , Supporter , public module |
 
 [![Chethana_Broh-TeenuhX](https://github.com/En-Cuzier.png?size=100)](https://https://youtu.be/mcEeIspWOpY) |
 ----|
