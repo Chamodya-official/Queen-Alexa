@@ -70,7 +70,7 @@ Bot owner , Bug fixer , module fixer|
 [Chethana_Broh-TeenuhX](https://github.com/TOXIC-DEVIL)  |
 Group owner , Supporter , bug fixer |
 
-![logo](https://telegra.ph/file/999e1c3d405ecfe9c1672.png)
+![logo](https://telegra.ph/file/d7f1c8ec3b84655d5e268.jpg)
 
 
 
